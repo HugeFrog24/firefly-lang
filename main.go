@@ -43,7 +43,7 @@ var instructionDefinitions = map[string]InstructionDefinition{
 		Name:    "GIFT",
 		MinArgs: 3,
 		MaxArgs: 3,
-		Usage:   "GIFT <giver> <receiver> <amount> - Transfer energy between fireflies",
+		Usage:   "GIFT <receiver> <giver> <amount> - Transfer energy from giver to receiver",
 	},
 	"FLY": {
 		Name:    "FLY",
@@ -83,8 +83,16 @@ var instructionDefinitions = map[string]InstructionDefinition{
 	},
 }
 
+var (
+	versionMajor = "0"
+	versionMinor = "0"
+	versionPatch = "0"
+)
+
 func main() {
-	fmt.Println("Firefly Programming Language v1.0.0")
+	// Construct the version string dynamically
+	version := fmt.Sprintf("Firefly Programming Language v%s.%s.%s", versionMajor, versionMinor, versionPatch)
+	fmt.Println(version)
 
 	if len(os.Args) > 2 {
 		fmt.Println("Error: Too many arguments")
@@ -108,20 +116,24 @@ func main() {
 			os.Exit(1)
 		}
 		instructions, err = readInstructionsFromFile(filename)
+		if err != nil {
+			fmt.Printf("Error reading instructions: %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Println("Executing Firefly Language Instructions:")
+		for _, instruction := range instructions {
+			fmt.Printf("\nExecuting: %s\n", instruction)
+			if err := executeInstruction(instruction); err != nil {
+				fmt.Printf("Error: %v\n", err)
+			}
+		}
 	} else {
-		instructions, err = readInstructionsFromStdin()
-	}
-
-	if err != nil {
-		fmt.Printf("Error reading instructions: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println("Executing Firefly Language Instructions:")
-	for _, instruction := range instructions {
-		fmt.Printf("\nExecuting: %s\n", instruction)
-		if err := executeInstruction(instruction); err != nil {
-			fmt.Printf("Error: %v\n", err)
+		// Interactive mode: execute instructions immediately
+		_, err = readInstructionsFromStdin()
+		if err != nil {
+			fmt.Printf("Error reading instructions: %v\n", err)
+			os.Exit(1)
 		}
 	}
 }
@@ -145,10 +157,8 @@ func readInstructionsFromFile(filename string) ([]string, error) {
 }
 
 func readInstructionsFromStdin() ([]string, error) {
-	var instructions []string
 	scanner := bufio.NewScanner(os.Stdin)
 
-	// Use newline characters to format the prompt
 	fmt.Println("Enter instructions (one per line).\nType 'HELP' for help, 'EXIT' to finish:")
 	fmt.Println() // This will print a blank line explicitly
 
@@ -166,14 +176,13 @@ func readInstructionsFromStdin() ([]string, error) {
 			continue
 		}
 		if line != "" && !strings.HasPrefix(line, ";") {
-			instructions = append(instructions, line)
 			// Execute the instruction immediately
 			if err := executeInstruction(line); err != nil {
 				fmt.Printf("Error: %v\n", err)
 			}
 		}
 	}
-	return instructions, scanner.Err()
+	return nil, scanner.Err()
 }
 
 func printUsage() {
@@ -232,13 +241,13 @@ func executeInstruction(instruction string) error {
 		}
 		return setEnergy(name, energy)
 	case "GIFT":
-		giver := strings.ToUpper(args[0])
-		receiver := strings.ToUpper(args[1])
+		receiver := strings.ToUpper(args[0])
+		giver := strings.ToUpper(args[1])
 		amount, err := strconv.Atoi(args[2])
 		if err != nil {
 			return fmt.Errorf("invalid gift amount: %v", err)
 		}
-		return gift(giver, receiver, amount)
+		return gift(receiver, giver, amount)
 	case "FLY":
 		name := strings.ToUpper(args[0])
 		amount, err := strconv.Atoi(args[1])
@@ -288,12 +297,12 @@ func setEnergy(name string, energy int) error {
 	return nil
 }
 
-func gift(giver, receiver string, amount int) error {
-	if _, existsGiver := getRegisterIndex(giver); !existsGiver {
-		return fmt.Errorf("invalid giver: %s. Use predefined names: %s", giver, strings.Join(registerNames, ", "))
-	}
+func gift(receiver, giver string, amount int) error {
 	if _, existsReceiver := getRegisterIndex(receiver); !existsReceiver {
 		return fmt.Errorf("invalid receiver: %s. Use predefined names: %s", receiver, strings.Join(registerNames, ", "))
+	}
+	if _, existsGiver := getRegisterIndex(giver); !existsGiver {
+		return fmt.Errorf("invalid giver: %s. Use predefined names: %s", giver, strings.Join(registerNames, ", "))
 	}
 
 	giverEnergy := registers[giver]
@@ -304,8 +313,8 @@ func gift(giver, receiver string, amount int) error {
 
 	registers[giver] -= amount
 	registers[receiver] = min(registers[receiver]+amount, maxEnergy)
-	fmt.Printf("%s gave %d energy to %s\n", giver, amount, receiver)
-	fmt.Printf("%s now has %d energy, %s now has %d energy\n", giver, registers[giver], receiver, registers[receiver])
+	fmt.Printf("%s received %d energy from %s. %s now has %d energy, %s now has %d energy.\n",
+		receiver, amount, giver, receiver, registers[receiver], giver, registers[giver])
 	return nil
 }
 

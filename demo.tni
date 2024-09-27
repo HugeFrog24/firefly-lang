@@ -2,8 +2,8 @@
 LIGHT TIB, 10       ; Tibik starts with 10 energy
 LIGHT NIN, 5        ; Nini starts with 5 energy
 
-; Tibik gifts Nini 5 energy
-GIFT TIB, NIN, 5    ; Tibik gives 5 of his energy to Nini, reducing his energy by 5
+; Nini receives 5 energy from Tibik
+GIFT NIN, TIB, 5    ; Nini receives 5 energy from Tibik, increasing her energy by 5
 
 ; They decrease their energy by flying
 FLY TIB, 3          ; Tibik flies, losing 3 energy
