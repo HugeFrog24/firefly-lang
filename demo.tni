@@ -1,0 +1,17 @@
+; Initialize both Tibik and Nini with consistent subject-first format
+LIGHT TIB, 10       ; Tibik starts with 10 energy
+LIGHT NIN, 5        ; Nini starts with 5 energy
+
+; Tibik gifts Nini 5 energy
+GIFT TIB, NIN, 5    ; Tibik gives 5 of his energy to Nini, reducing his energy by 5
+
+; They decrease their energy by flying
+FLY TIB, 3          ; Tibik flies, losing 3 energy
+FLY NIN, 1          ; Nini flies, losing 1 energy
+
+; They hug and recharge fully
+HUG                  ; Both recharge to maximum energy (10)
+
+; Display the energy levels of both
+SHOW LIGHT TIB       ; Displays Tibik's energy level
+SHOW LIGHT NIN       ; Displays Nini's energy level
