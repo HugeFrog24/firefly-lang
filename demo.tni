@@ -2,7 +2,7 @@
 LIGHT TIB, 10       ; Tibik starts with 10 energy
 LIGHT NIN, 5        ; Nini starts with 5 energy
 
-; Nini receives 5 energy from Tibik
+; Nini receives energy from Tibik
 GIFT NIN, TIB, 5    ; Nini receives 5 energy from Tibik
 
 ; They decrease their energy by flying
