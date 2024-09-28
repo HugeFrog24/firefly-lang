@@ -15,3 +15,5 @@ HUG                  ; Both recharge to maximum energy (10)
 ; Display the energy levels of both
 SHOW LIGHT TIB       ; Displays Tibik's energy level (10)
 SHOW LIGHT NIN       ; Displays Nini's energy level (10)
+
+; In this programming language, interactions between entities are framed around energy management. The design emphasizes readability and structured interaction.
