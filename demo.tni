@@ -3,7 +3,7 @@ LIGHT TIB, 10       ; Tibik starts with 10 energy
 LIGHT NIN, 5        ; Nini starts with 5 energy
 
 ; Nini receives 5 energy from Tibik
-GIFT NIN, TIB, 5    ; Nini receives 5 energy from Tibik, increasing her energy by 5
+GIFT NIN, TIB, 5    ; Nini receives 5 energy from Tibik
 
 ; They decrease their energy by flying
 FLY TIB, 3          ; Tibik flies, losing 3 energy
@@ -13,5 +13,5 @@ FLY NIN, 1          ; Nini flies, losing 1 energy
 HUG                  ; Both recharge to maximum energy (10)
 
 ; Display the energy levels of both
-SHOW LIGHT TIB       ; Displays Tibik's energy level
-SHOW LIGHT NIN       ; Displays Nini's energy level
+SHOW LIGHT TIB       ; Displays Tibik's energy level (10)
+SHOW LIGHT NIN       ; Displays Nini's energy level (10)
