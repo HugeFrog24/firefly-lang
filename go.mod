@@ -1,4 +1,4 @@
-module firefly-lang
+module github.com/HugeFrog24/firefly-lang
 
 go 1.20
 
